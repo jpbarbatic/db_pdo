@@ -5,6 +5,7 @@ Dentro del fichero hay dos versiones:
 - Orientada a objetos
 - con funciones
 ## Datos de la conexión de la base de datos
+Los datos de conexión deben definirse en un fichero que cargue las siguientes constantes
 ```php
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
