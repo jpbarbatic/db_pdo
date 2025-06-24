@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Clase DB
  * Esta clase es un wrapper de la librería de funciones db_pdo. 
@@ -27,13 +26,13 @@ class DB
      *
      * @return DB|false
      */
-    public static function open(): DB|false
+    public static function open($conf = null): DB|false
     {
         if (self::$instancia == null) {
-            $conn=db_open();
-            if($conn){
+            $conn = db_open($conf);
+            if ($conn) {
                 self::$instancia = new DB($conn);
-            }else{
+            } else {
                 return false;
             }
         }
@@ -123,20 +122,34 @@ class DB
     }
 }
 
+
 /**
- * Abre una conexión a la base de datos usando PDO.
+ * db_open
  *
- * @return PDO|null Retorna un objeto PDO si la conexión es exitosa, null en caso de error.
+ * @param  mixed $conf
+ * @return PDO
  */
-function db_open(): ?PDO
+function db_open($conf = null): ?PDO
 {
+    if (isset($conf)) {
+        extract($conf);
+    } else {
+        $db_type = DB_TYPE;
+        $sqlite_path = DB_SQLITE_PATH;
+        $db_host = DB_HOST;
+        $db_port = DB_PORT;
+        $db_user = DB_USER;
+        $db_pass = DB_PASS;
+        $db_name = DB_NAME;
+    }
+
     try {
-        if (DB_TYPE === 'sqlite') {
-            $conn = new PDO("sqlite:" . DB_SQLITE_PATH);
+        if ($db_type === 'sqlite') {
+            $conn = new PDO("sqlite:" . $sqlite_path);
         } else {
             // Construimos la cadena de conexión (DSN) usando constantes definidas en utils.php
-            $uri = DB_TYPE . ":host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME;
-            $conn = new PDO($uri, DB_USER, DB_PASS);
+            $uri = $db_type . ":host=" . $db_host . ";port=" . $db_port . ";dbname=" . $db_name;
+            $conn = new PDO($uri, $db_user, $db_pass);
         }
 
         // Configuramos el modo de errores: excepciones
