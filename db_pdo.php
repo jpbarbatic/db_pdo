@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Clase DB
  * Esta clase es un wrapper de la librería de funciones db_pdo. 

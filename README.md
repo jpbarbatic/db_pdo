@@ -3,7 +3,7 @@
 Esta librería facilita el uso de la librería PDO crendo funciones específicas para queries, insert, update y delete.
 Dentro del fichero hay dos versiones:
 - Orientada a objetos
-- con funciones
+- Con funciones
 ## Datos de la conexión de la base de datos
 Los datos de conexión deben definirse en un fichero que cargue las siguientes constantes
 ```php
@@ -14,5 +14,4 @@ define('DB_USER', 'root');
 define('DB_PASS', 'example');
 define('DB_NAME', 'webapp');
 define('DB_PORT', 3306);
-
 ```
