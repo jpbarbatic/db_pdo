@@ -7,9 +7,12 @@ Dentro del fichero hay dos versiones:
 ## Datos de la conexión de la base de datos
 Los datos de conexión deben definirse en un fichero que cargue las siguientes constantes
 ```php
+define('DB_TYPE', 'mysql');
+define('DB_SQLITE_PATH', '');
 define('DB_HOST', '127.0.0.1');
 define('DB_USER', 'root');
 define('DB_PASS', 'example');
 define('DB_NAME', 'webapp');
 define('DB_PORT', 3306);
+
 ```
