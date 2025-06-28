@@ -253,6 +253,67 @@ function db_get_by_id(PDO $conn, string $table, mixed $id, string $id_name = 'id
 }
 
 /**
+ * db_filter
+ *
+ * @param  mixed $db
+ * @param  mixed $tabla
+ * @param  mixed $filtro
+ * @param  mixed $orden_campo
+ * @param  mixed $orden_dir
+ * @param  mixed $pagina
+ * @return void
+ */
+function db_filter($db, $tabla, $filtro, $orden_campo='id', $orden_dir = 'ASC', $pagina = 1)
+{
+    if ($db) {
+        $whereArray = [];
+        $params = [];
+        if ($filtro and count($filtro) > 0) {
+            foreach ($filtro as $f) {
+                $campo = $f['campo'];
+                $tipo = $f['tipo'];
+                if ($tipo == 'texto') {
+                    $whereArray[] = "LOWER($campo) LIKE LOWER(?)";
+                    $params[] = '%' . $f['valor'] . '%';
+                } else if ($tipo == 'entero') {
+                    $whereArray[] = "$campo=?";
+                    $params[] = $f['valor'];
+                } else if ($tipo == 'intervalo') {
+                    if(isset($f['min'])){
+                        $whereArray[] = "$campo>?";
+                        $params[] = $f['min'];    
+                    }
+                    if(isset($f['max'])){
+                        $whereArray[] = "$campo<?";
+                        $params[] = $f['max'];    
+                    }
+                }
+            }
+            $where = 'WHERE ' . implode(' AND ', $whereArray);
+        }
+
+        $sql_total = "SELECT COUNT(*) as total FROM $tabla $where";
+        echo $sql_total . PHP_EOL;
+        $total = db_query($db, $sql_total, $params)[0]['total'];
+        echo $total.PHP_EOL;
+
+        $limit = ITEMS_POR_PAGINA;
+        $offset = ITEMS_POR_PAGINA * ($pagina - 1);
+
+        $sql = "SELECT * FROM $tabla $where  ORDER BY $orden_campo $orden_dir LIMIT $limit OFFSET $offset";
+        echo $sql . PHP_EOL;
+        print_r($params);
+        $registros = db_query($db, $sql, $params);
+        
+        //return false;
+        return ['total'=>$total, 'datos'=>$registros];
+    } else {
+        return false;
+    }
+}
+
+
+/**
  * Inserta un nuevo registro en la tabla especificada.
  *
  * @param PDO $conn Conexión activa a la base de datos
